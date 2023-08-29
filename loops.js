@@ -17,14 +17,16 @@ const getDaysInMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 
 
 // Only edit below 
 
+
 /**
- * Creates an array of a specific length and returns it
+ * Function that creates an array of a particular length and returns it.
  * @param {*} length 
+ * 
  */
 const createArray = (length) => {
     const result = []
 
-    for (let i = 0 ; i < length ; i = i + 1) {
+    for (let i = 0; i < length; i++) {
         result.push(i)
     }
 
@@ -32,11 +34,11 @@ const createArray = (length) => {
 }
 
 /**
- * Creates an array showing days and weeks of current month and returns it
+ * Function that creates an array showing days and weeks in the month and returns it.
+ * 
  */
 const createData = () => {
     const current = new Date()
-    current.setDate(1)
 
     const startDay = current.getDay()
     const daysInMonth = getDaysInMonth(current)
@@ -44,16 +46,15 @@ const createData = () => {
     const weeks = createArray(5)
     const days = createArray(7)
 
-
     for (let weekIndex = 0; weekIndex < weeks.length; weekIndex++) {
         const value = {
             week: weekIndex + 1,
             days: []
         }
 
-        for (const dayIndex in days) {
-            const day = dayIndex - startDay + 1 + weekIndex * 7
-            const isValid = (day > 0) && (day <= daysInMonth)
+        for (const dayIndex of days) {
+            const day = (dayIndex - startDay) + (weekIndex * 7)  + 1
+            const isValid = day > 0 && day <= daysInMonth 
 
             value.days.push({
                 dayOfWeek: dayIndex + 1,
@@ -61,12 +62,19 @@ const createData = () => {
             })
         }
         weeks[weekIndex] = value
-    } 
-    return weeks 
+    }
+
+    return weeks
 }
 
-
-const addCell = (existing, classString) => {
+/**
+ * Function that 
+ * @param {*} existing 
+ * @param {*} classString 
+ * @param {*} value 
+ * @returns 
+ */
+const addCell = (existing, classString, value) => {
     const result = /* html */ `
         <td class="${classString}">
             &nbsp;${existing}&nbsp;
@@ -76,23 +84,30 @@ const addCell = (existing, classString) => {
     return result
 }
 
+/**
+ * Function that creates the html 
+ * @param {*} data 
+ * @returns 
+ */
 const createHtml = (data) => {
     let result = ''
 
     for (const week of data) {
-        let inner = ''
+        let inner = ""
         inner = addCell(`Week ${week.week}`, 'table__cell table__cell_sidebar', inner)
     
          for (const day of week.days) {
+
             const isToday = new Date().toDateString() === new Date(current.getFullYear(), current.getMonth(), day.value).toDateString()
             const isWeekend = day.dayOfWeek === 1 || day.dayOfWeek === 7
-            const isAlternate = week.week % 2 === 0
+            const isAlternate = (week.week % 2) === 0
             
-					let classString = 'table__cell'
+		    let classString = 'table__cell'
 
-            if (isToday) classString += ' table__cell_today'
-            if (isWeekend) classString += ' table__cell_weekend'
-            if (isAlternate) classString += ' table__cell_alternate'
+            if (isToday) classString += ` table__cell_today`
+            if (isWeekend) classString += ` table__cell_weekend`
+            if (isAlternate) classString += ` table__cell_alternate`
+
             inner += addCell(day.value, classString)
         }
 
